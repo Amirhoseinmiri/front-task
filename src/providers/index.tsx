@@ -1,6 +1,7 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useState } from "react";
+import { LeagueContextProvider } from "../context";
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(
@@ -16,7 +17,9 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
       })
   );
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <LeagueContextProvider>{children}</LeagueContextProvider>
+    </QueryClientProvider>
   );
 };
 

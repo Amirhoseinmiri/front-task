@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import HomePageView from "../components/home";
 
 export default function Home() {
-  return redirect("/hsud");
+  return <HomePageView />;
 }
