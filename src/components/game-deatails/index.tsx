@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import GameResult from "../game-result";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Overview from "../overview";
@@ -9,61 +8,25 @@ import Signals from "../signals";
 import Articles from "../articles";
 import Trends from "../trends";
 import { useParams } from "next/navigation";
-import { getFixtureDetails } from "../../api/service";
-type FixtureDetails = {
-  fixture: {
-    id: number;
-    date: string;
-    status: {
-      long: string;
-      short: string;
-    };
-  };
-  teams: {
-    home: {
-      name: string;
-      logo: string;
-      winner: boolean;
-    };
-    away: {
-      name: string;
-      logo: string;
-      winner: boolean;
-    };
-  };
-  goals: {
-    home: number;
-    away: number;
-  };
-};
+import { useFixtureDetails } from "../../hooks/use-fixture-details";
 
 const GameDeatails = () => {
-  const [gameDeatails, setGamesDeatails] = useState<FixtureDetails | null>();
   const { id } = useParams<{
     id: string;
   }>();
-  useEffect(() => {
-    const fetchGameList = async () => {
-      try {
-        const res = await getFixtureDetails(Number(id));
-        console.log(res);
-        setGamesDeatails(res[0]);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchGameList();
-  }, [id]);
+  const { data } = useFixtureDetails(Number(id));
+  console.log(data && data[0]?.teams.home.id);
+  const teamId = data ? (data[0]?.teams?.away?.id as number) : 0;
   return (
     <div className="space-y-4 h-screen">
-      {gameDeatails && (
+      {data && (
         <GameResult
-          homeTeam={gameDeatails?.teams?.home!}
-          awayTeam={gameDeatails?.teams?.away!}
-          homeGoals={gameDeatails?.goals?.home!}
-          awayGoals={gameDeatails?.goals?.away!}
-          status={gameDeatails?.fixture?.status?.long!}
-          date={gameDeatails?.fixture?.date!}
+          homeTeam={data[0]?.teams?.home}
+          awayTeam={data[0]?.teams?.away}
+          homeGoals={data[0]?.goals?.home}
+          awayGoals={data[0]?.goals?.away}
+          status={data[0]?.fixture?.status?.long}
+          date={data[0]?.fixture?.date}
         />
       )}
       <div className="bg-gray-200 p-4 min-h-full">
@@ -90,7 +53,7 @@ const GameDeatails = () => {
           </TabsContent>
           <TabsContent value="props">Props</TabsContent>
           <TabsContent value="trends">
-            <Trends />
+            <Trends teamId={teamId} />
           </TabsContent>
         </Tabs>
       </div>

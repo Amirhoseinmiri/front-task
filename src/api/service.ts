@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Fixture, FixtureDetails, League } from "../types";
+import { Fixture, FixtureDetails, FixtureResponse, League } from "../types";
 import axiosInstance from "./config";
 
 // 1. Fetch List of Leagues
@@ -67,16 +67,16 @@ export const getOdds = async (fixtureId: number): Promise<any> => {
 // 5. Fetch Last 10 Games for a Team
 export const getLast10Games = async (
   teamId: number,
-  season: number
-): Promise<any> => {
+  season = 2023
+): Promise<FixtureResponse> => {
   try {
-    const response = await axiosInstance.get(`/teams/${teamId}/matches`, {
+    const response = await axiosInstance.get(`/fixtures`, {
       params: {
-        season: season,
-        limit: 10,
+        team: teamId,
+        season,
       },
     });
-    return response.data.response; // Returning the last 10 games data
+    return response.data; // Returning the last 10 games data
   } catch (error) {
     console.error("Error fetching last 10 games:", error);
     throw new Error("Error fetching last 10 games");

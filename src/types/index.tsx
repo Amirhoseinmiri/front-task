@@ -286,17 +286,106 @@ export type FixtureDetails = {
     }[];
   }[];
 };
-export interface Odds {
-  bookmaker: {
-    id: number;
-    name: string;
+
+interface Team {
+  id: number;
+  name: string;
+  logo: string;
+}
+
+export interface ApiFootballResponse {
+  response: Array<{
+    fixture: Fixture;
+    teams: {
+      home: Team;
+      away: Team;
+    };
+  }>;
+}
+
+export interface FixtureResponse {
+  get: string; // Type of request (e.g., "fixtures")
+  parameters: {
+    team: string; // Team ID as a string
+    season: string; // Season year as a string
   };
-  bets: {
-    id: number;
-    name: string;
-    values: {
-      value: string;
-      odd: string;
-    }[];
-  }[];
+  errors: any[]; // Any errors that might occur (empty in this case)
+  results: number; // Total number of results
+  paging: {
+    current: number; // Current page of the results
+    total: number; // Total pages available
+  };
+  response: FixtureLast10Game[]; // Array of fixture objects
+}
+
+// Fixture object representing each match
+export interface FixtureLast10Game {
+  fixture: {
+    id: number; // Fixture ID
+    referee: string; // Referee's name
+    timezone: string; // Timezone for the match
+    date: string; // Match date (ISO format)
+    timestamp: number; // Match timestamp
+    periods: {
+      first: number; // Timestamp for the first half
+      second: number; // Timestamp for the second half
+    };
+    venue: {
+      id: number; // Venue ID
+      name: string; // Venue name
+      city: string; // City where the match is held
+    };
+    status: {
+      long: string; // Full status of the match (e.g., "Match Finished")
+      short: string; // Short status (e.g., "FT" for Full Time)
+      elapsed: number | null; // Time elapsed in minutes (null if not started or live)
+      extra: string | null; // Extra time status (null if no extra time)
+    };
+  };
+  league: {
+    id: number; // League ID
+    name: string; // League name
+    country: string; // Country where the league is played
+    logo: string; // Logo URL for the league
+    flag: string; // Country flag URL
+    season: number; // Season year
+    round: string; // Round description (e.g., "Regular Season - 1")
+    standings: boolean; // Whether standings are available
+  };
+  teams: {
+    home: {
+      id: number; // Home team ID
+      name: string; // Home team name
+      logo: string; // Logo URL for the home team
+      winner: boolean | null; // Whether the home team won (null if not decided yet)
+    };
+    away: {
+      id: number; // Away team ID
+      name: string; // Away team name
+      logo: string; // Logo URL for the away team
+      winner: boolean | null; // Whether the away team won (null if not decided yet)
+    };
+  };
+  goals: {
+    home: number; // Goals scored by the home team
+    away: number; // Goals scored by the away team
+  };
+  score: {
+    halftime: {
+      home: number | null; // Home team score at halftime
+      away: number | null; // Away team score at halftime
+    };
+    fulltime: {
+      home: number | null; // Home team score at full-time
+      away: number | null; // Away team score at full-time
+    };
+    extratime: {
+      home: number | null; // Home team score during extra time (if applicable)
+      away: number | null; // Away team score during extra time (if applicable)
+    };
+    penalty: {
+      home: number | null; // Home team penalty score (if applicable)
+      away: number | null; // Away team penalty score (if applicable)
+    };
+  };
 }

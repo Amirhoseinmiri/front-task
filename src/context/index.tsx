@@ -1,8 +1,8 @@
 import React, { createContext, useState, ReactNode } from "react";
 
 export interface LeagueType {
-  leagueId: number | string;
-  setLeagueId: (id: number | string) => void;
+  teamId: number | string;
+  setTeamId: (id: number | string) => void;
 }
 
 export const LeagueContext = createContext<LeagueType | undefined>(undefined);
@@ -14,10 +14,10 @@ interface LeagueProviderProps {
 export const LeagueContextProvider: React.FC<LeagueProviderProps> = ({
   children,
 }) => {
-  const [leagueId, setLeagueId] = useState<number | string>(0);
+  const [teamId, setTeamId] = useState<number | string>(0);
 
   return (
-    <LeagueContext.Provider value={{ leagueId, setLeagueId }}>
+    <LeagueContext.Provider value={{ teamId, setTeamId }}>
       {children}
     </LeagueContext.Provider>
   );

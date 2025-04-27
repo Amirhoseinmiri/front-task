@@ -1,41 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useEffect, useState } from "react";
-import { getLeagues } from "../../api/service";
-import { useLeagueContext } from "../../hooks/use-league";
+import React from "react";
 import Link from "next/link";
+import { useLeagues } from "../../hooks/use-leagues";
 
 const HomePageView = () => {
-  const [league, setLeague] = useState<any[]>();
-  const { setLeagueId } = useLeagueContext();
-
-  useEffect(() => {
-    const fetchLeagues = async () => {
-      try {
-        const response = await getLeagues();
-        if (response) {
-          setLeague(response);
-        }
-      } catch (error) {
-        console.error("Error fetching leagues:", error);
-      }
-    };
-    fetchLeagues();
-  }, []);
+  const { data } = useLeagues();
   return (
     <div>
       <ul>
-        {league?.map((item) => (
+        {data?.map((item) => (
           <li key={item.league.id}>
-            <Link href={`/leagues/${item.league.id}`}>
-              <button
-                onClick={() => {
-                  setLeagueId(item.league.id);
-                }}
-              >
-                {item.league.name}
-              </button>
-            </Link>
+            <Link href={`/leagues/${item.league.id}`}>{item.league.name}</Link>
           </li>
         ))}
       </ul>

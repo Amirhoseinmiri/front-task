@@ -4,7 +4,13 @@ import { BestOdds, GameTime } from "./filter-odds";
 import Link from "next/link";
 import CardProvider from "../card-provider";
 
-const Odds = () => {
+const Odds = ({
+  awayName,
+  homeName,
+}: {
+  homeName: string;
+  awayName: string;
+}) => {
   return (
     <CardProvider>
       <div className="flex justify-between items-center w-full">
@@ -32,7 +38,7 @@ const Odds = () => {
         <div className="flex items-center justify-between gap-2">
           <span className="flex items-center  gap-3">
             <Image src={"/RBB.webp"} alt="team logo" width={50} height={50} />
-            <p className="text-lg font-bold">Real Betis Seville</p>
+            <p className="text-lg font-bold">{homeName}</p>
           </span>
           <div className="w-[40%] flex items-center justify-between">
             {" "}
@@ -62,7 +68,7 @@ const Odds = () => {
         <div className="flex items-center justify-between gap-2">
           <span className="flex items-center  gap-3">
             <Image src={"/RBB.webp"} alt="team logo" width={50} height={50} />
-            <p className="text-lg font-bold">Real Betis Seville</p>
+            <p className="text-lg font-bold">{awayName}</p>
           </span>
           <div className="w-[40%] flex items-center justify-between">
             {" "}

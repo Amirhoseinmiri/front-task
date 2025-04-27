@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.bettingpros.com",
       },
+      {
+        protocol: "https",
+        hostname: "media.api-sports.io",
+      },
     ],
   },
 };

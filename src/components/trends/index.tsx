@@ -8,14 +8,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { format } from "date-fns";
+
 import CardProvider from "../card-provider";
 import Link from "next/link";
 import { Filter } from "lucide-react";
-import { lastTenGames } from "../../mock";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { useLast10Games } from "../../hooks/use-last10game";
+import { cn } from "../../lib/utils";
 
-const Trends = () => {
+const Trends = ({
+  teamId,
+  setTeamId,
+  awayId,
+}: {
+  teamId: number;
+  setTeamId: (key: number) => void;
+  awayId: number;
+}) => {
+  const { data } = useLast10Games(teamId);
+  const determineResult = (homeGoals: number, awayGoals: number) => {
+    if (homeGoals > awayGoals) return "Win";
+    if (awayGoals > homeGoals) return "Loss";
+    return "Draw";
+  };
+
   return (
     <CardProvider>
       <Tabs defaultValue="overview" className="flex w-full items-center">
@@ -30,8 +48,12 @@ const Trends = () => {
             <p className="text-lg font-bold">Last 10 Games</p>
           </span>
           <TabsList className="w-[20%] gap-5 justify-start ml-auto">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="odds">Odds</TabsTrigger>
+            <TabsTrigger value="overview" onClick={() => setTeamId(awayId)}>
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="odds" onClick={() => setTeamId(teamId)}>
+              Odds
+            </TabsTrigger>
           </TabsList>
         </div>
         <TabsContent value="overview" className="w-full mt-2">
@@ -53,26 +75,72 @@ const Trends = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {lastTenGames.map((game) => (
-                <TableRow
-                  key={game.id}
-                  className="border-b border-gray-300 odd:bg-gray-100"
-                >
-                  <TableCell>{game.date}</TableCell>
-                  <TableCell className="flex items-center gap-3">
-                    <Image
-                      src={game.opponentLogo}
-                      alt="team logo"
-                      width={40}
-                      height={40}
-                    />
-                    <p>{game.opponent}</p>
-                  </TableCell>
-                  <TableCell>{game.score}</TableCell>
-                  <TableCell>{game.total}</TableCell>
-                  <TableCell>{game.monyLine}</TableCell>
-                </TableRow>
-              ))}
+              {/* {data?.response
+                ? data.response.map((item, i) => (
+                    <li key={item.fixture.id}>
+                      <Image
+                        alt=""
+                        src={item.teams.home.logo}
+                        width={50}
+                        height={50}
+                      />
+                    </li>
+                  ))
+                : null} */}
+              {data?.response
+                ? data.response.map((item) => {
+                    const isHomeTeam = item.teams.home.id === teamId;
+                    const opponent = isHomeTeam
+                      ? item.teams.away
+                      : item.teams.home;
+                    const homeGoals = item.goals.home;
+                    const awayGoals = item.goals.away;
+
+                    const result = isHomeTeam
+                      ? determineResult(homeGoals, awayGoals) // Home team result
+                      : determineResult(awayGoals, homeGoals); // Away team result
+
+                    return (
+                      <TableRow key={item.fixture.id}>
+                        <TableCell>
+                          {format(item.fixture.date, "yyyy/MM/dd")}
+                        </TableCell>
+                        <TableCell
+                          className="flex
+                         items-center gap-2 w-10"
+                        >
+                          <Image
+                            src={opponent.logo}
+                            alt="team logo"
+                            width={30}
+                            height={30}
+                          />
+                          {opponent.name}
+                        </TableCell>
+                        <TableCell className="flex items-center gap-1">
+                          <span
+                            className={cn(
+                              result === "Win"
+                                ? "text-green-300"
+                                : result === "Loss"
+                                ? "text-red-400"
+                                : "text-white"
+                            )}
+                          >
+                            {result}
+                          </span>
+                          <p>
+                            {awayGoals} - {homeGoals}
+                          </p>
+                        </TableCell>
+                        <TableCell>{item.goals.away}</TableCell>
+                      </TableRow>
+                    );
+                  })
+                : null}
+              {/* {
+                data && data.teams.away.
+              } */}
             </TableBody>
           </Table>
         </TabsContent>
@@ -95,26 +163,70 @@ const Trends = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {lastTenGames.map((game) => (
-                <TableRow
-                  key={game.id}
-                  className="border-b border-gray-300 odd:bg-gray-100"
-                >
-                  <TableCell>{game.date}</TableCell>
-                  <TableCell className="flex items-center gap-3">
-                    <Image
-                      src={game.opponentLogo}
-                      alt="team logo"
-                      width={40}
-                      height={40}
-                    />
-                    <p>{game.opponent}</p>
-                  </TableCell>
-                  <TableCell>{game.score}</TableCell>
-                  <TableCell>{game.total}</TableCell>
-                  <TableCell>{game.monyLine}</TableCell>
-                </TableRow>
-              ))}
+              {/* {data?.response
+                ? data.response.map((item, i) => (
+                    <li key={item.fixture.id}>
+                      <Image
+                        alt=""
+                        src={item.teams.home.logo}
+                        width={50}
+                        height={50}
+                      />
+                    </li>
+                  ))
+                : null} */}
+              {data?.response
+                ? data.response.map((item) => {
+                    const isHomeTeam = item.teams.home.id === teamId;
+                    const opponent = isHomeTeam
+                      ? item.teams.away
+                      : item.teams.home;
+                    const homeGoals = item.goals.home;
+                    const awayGoals = item.goals.away;
+
+                    const result = isHomeTeam
+                      ? determineResult(homeGoals, awayGoals) // Home team result
+                      : determineResult(awayGoals, homeGoals); // Away team result
+
+                    return (
+                      <TableRow key={item.fixture.id}>
+                        <TableCell>
+                          {format(item.fixture.date, "yyyy/MM/dd")}
+                        </TableCell>
+                        <TableCell>
+                          <Image
+                            src={opponent.logo}
+                            alt="team logo"
+                            width={30}
+                            height={30}
+                          />
+                          {opponent.name}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          <span
+                            className={cn(
+                              result === "Win"
+                                ? "text-green-300"
+                                : result === "Loss"
+                                ? "text-red-400"
+                                : "text-white"
+                            )}
+                          >
+                            {result}
+                          </span>
+                          <p>
+                            {awayGoals} - {homeGoals}
+                          </p>
+                        </TableCell>
+                        <TableCell>{item.goals.away}</TableCell>
+                      </TableRow>
+                    );
+                  })
+                : null}
+              {/* {
+                data && data.teams.away.
+              } */}
             </TableBody>
           </Table>
         </TabsContent>
