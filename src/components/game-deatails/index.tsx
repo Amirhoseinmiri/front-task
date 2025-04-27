@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import GameResult from "../game-result";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Overview from "../overview";
@@ -16,7 +16,12 @@ const GameDeatails = () => {
   }>();
   const { data } = useFixtureDetails(Number(id));
   console.log(data && data[0]?.teams.home.id);
-  const teamId = data ? (data[0]?.teams?.away?.id as number) : 0;
+
+  const [teamId, setTeamId] = useState<number>(
+    data ? data[0]?.teams?.away?.id : 0
+  );
+  const awayId = data ? data[0]?.teams?.home?.id : 0; // Away team ID
+
   return (
     <div className="space-y-4 h-screen">
       {data && (
@@ -43,7 +48,11 @@ const GameDeatails = () => {
             <Overview />
           </TabsContent>
           <TabsContent value="odds">
-            <Odds />
+            <Odds
+              awayName={data ? data[0]?.teams?.away?.name : ""}
+              homeName={data ? data[0]?.teams?.home?.name : ""}
+              id={Number(id)}
+            />
           </TabsContent>
           <TabsContent value="picks">
             <Signals />
@@ -53,7 +62,7 @@ const GameDeatails = () => {
           </TabsContent>
           <TabsContent value="props">Props</TabsContent>
           <TabsContent value="trends">
-            <Trends teamId={teamId} />
+            <Trends teamId={teamId} setTeamId={setTeamId} awayId={awayId} />
           </TabsContent>
         </Tabs>
       </div>

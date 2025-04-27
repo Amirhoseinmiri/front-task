@@ -112,3 +112,54 @@ export const lastTenGames = [
     monyLine: -115,
   },
 ];
+export const Articledata = [
+  {
+    imageSrc: "/article.webp", // Example image source
+    link: "/soccer", // Link to the article
+    title: "Premier League Matchday 33 Odds, Picks & Prediction (2025)",
+    author: "Trenton Pruitt",
+    date: "10 days ago",
+    category: "Soccer",
+    views: 3245,
+    excerpt:
+      "An in-depth analysis of Premier League Matchday 33 with predictions and betting odds.",
+    tags: ["Premier League", "Football", "Betting", "Prediction"],
+  },
+  {
+    imageSrc: "/article.webp",
+    link: "/soccer",
+    title: "La Liga Week 15 Preview and Betting Odds",
+    author: "Alex Johnson",
+    date: "3 days ago",
+    category: "Soccer",
+    views: 2311,
+    excerpt:
+      "Previewing La Liga's top matches in week 15, with betting insights and odds.",
+    tags: ["La Liga", "Football", "Betting", "Preview"],
+  },
+  {
+    imageSrc: "/article.webp",
+    link: "/soccer",
+    title: "La Liga Week 15 Preview and Betting Odds",
+    author: "Alex Johnson",
+    date: "3 days ago",
+    category: "Soccer",
+    views: 2311,
+    excerpt:
+      "Previewing La Liga's top matches in week 15, with betting insights and odds.",
+    tags: ["La Liga", "Football", "Betting", "Preview"],
+  },
+  {
+    imageSrc: "/article.webp",
+    link: "/soccer",
+    title: "La Liga Week 15 Preview and Betting Odds",
+    author: "Alex Johnson",
+    date: "3 days ago",
+    category: "Soccer",
+    views: 2311,
+    excerpt:
+      "Previewing La Liga's top matches in week 15, with betting insights and odds.",
+    tags: ["La Liga", "Football", "Betting", "Preview"],
+  },
+  // More articles can be added here
+];

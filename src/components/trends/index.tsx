@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-
 import CardProvider from "../card-provider";
 import Link from "next/link";
 import { Filter } from "lucide-react";
@@ -28,11 +27,18 @@ const Trends = ({
   awayId: number;
 }) => {
   const { data } = useLast10Games(teamId);
+  const [isHomeTeam, setIsHomeTeam] = useState(true); // Track whether we're showing home or away team
+
   const determineResult = (homeGoals: number, awayGoals: number) => {
     if (homeGoals > awayGoals) return "Win";
     if (awayGoals > homeGoals) return "Loss";
     return "Draw";
   };
+
+  useEffect(() => {
+    // When the teamId changes, we reset to show home team data by default
+    setIsHomeTeam(teamId === awayId ? false : true);
+  }, [teamId, awayId]);
 
   return (
     <CardProvider>
@@ -71,25 +77,12 @@ const Trends = ({
                 <TableHead>Opponent</TableHead>
                 <TableHead>Score</TableHead>
                 <TableHead>Total</TableHead>
-                <TableHead>Monyline</TableHead>
+                <TableHead>Moneyline</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {/* {data?.response
-                ? data.response.map((item, i) => (
-                    <li key={item.fixture.id}>
-                      <Image
-                        alt=""
-                        src={item.teams.home.logo}
-                        width={50}
-                        height={50}
-                      />
-                    </li>
-                  ))
-                : null} */}
               {data?.response
                 ? data.response.map((item) => {
-                    const isHomeTeam = item.teams.home.id === teamId;
                     const opponent = isHomeTeam
                       ? item.teams.away
                       : item.teams.home;
@@ -97,18 +90,15 @@ const Trends = ({
                     const awayGoals = item.goals.away;
 
                     const result = isHomeTeam
-                      ? determineResult(homeGoals, awayGoals) // Home team result
-                      : determineResult(awayGoals, homeGoals); // Away team result
+                      ? determineResult(homeGoals, awayGoals)
+                      : determineResult(awayGoals, homeGoals);
 
                     return (
                       <TableRow key={item.fixture.id}>
                         <TableCell>
                           {format(item.fixture.date, "yyyy/MM/dd")}
                         </TableCell>
-                        <TableCell
-                          className="flex
-                         items-center gap-2 w-10"
-                        >
+                        <TableCell className="flex items-center gap-2 w-10">
                           <Image
                             src={opponent.logo}
                             alt="team logo"
@@ -138,9 +128,6 @@ const Trends = ({
                     );
                   })
                 : null}
-              {/* {
-                data && data.teams.away.
-              } */}
             </TableBody>
           </Table>
         </TabsContent>
@@ -159,25 +146,12 @@ const Trends = ({
                 <TableHead>Opponent</TableHead>
                 <TableHead>Score</TableHead>
                 <TableHead>Total</TableHead>
-                <TableHead>Monyline</TableHead>
+                <TableHead>Moneyline</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {/* {data?.response
-                ? data.response.map((item, i) => (
-                    <li key={item.fixture.id}>
-                      <Image
-                        alt=""
-                        src={item.teams.home.logo}
-                        width={50}
-                        height={50}
-                      />
-                    </li>
-                  ))
-                : null} */}
               {data?.response
                 ? data.response.map((item) => {
-                    const isHomeTeam = item.teams.home.id === teamId;
                     const opponent = isHomeTeam
                       ? item.teams.away
                       : item.teams.home;
@@ -185,8 +159,8 @@ const Trends = ({
                     const awayGoals = item.goals.away;
 
                     const result = isHomeTeam
-                      ? determineResult(homeGoals, awayGoals) // Home team result
-                      : determineResult(awayGoals, homeGoals); // Away team result
+                      ? determineResult(homeGoals, awayGoals)
+                      : determineResult(awayGoals, homeGoals);
 
                     return (
                       <TableRow key={item.fixture.id}>
@@ -203,7 +177,6 @@ const Trends = ({
                           {opponent.name}
                         </TableCell>
                         <TableCell>
-                          {" "}
                           <span
                             className={cn(
                               result === "Win"
@@ -224,9 +197,6 @@ const Trends = ({
                     );
                   })
                 : null}
-              {/* {
-                data && data.teams.away.
-              } */}
             </TableBody>
           </Table>
         </TabsContent>

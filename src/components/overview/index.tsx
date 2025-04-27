@@ -106,6 +106,7 @@ const Overview = () => {
       <Odds
         awayName={data ? data[0]?.teams?.away?.name : ""}
         homeName={data ? data[0]?.teams?.home?.name : ""}
+        id={Number(id)}
       />
       {/* <Trends teamId={teamId} awayId={} /> */}
       {/* <ul>
